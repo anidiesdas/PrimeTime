@@ -1,4 +1,4 @@
-package sdd.PrimeTime.PrimeTime;
+package sdd.PrimeTime;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
