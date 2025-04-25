@@ -2,7 +2,9 @@ package sdd.PrimeTime.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Ani Nguyen on 11/04/2025.
@@ -14,19 +16,17 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
 
+//    @OneToMany(mappedBy = "member")
+//    private List<Rating> ratings = new ArrayList<>();
+
     @OneToMany(mappedBy = "member")
-    private List<Rating> ratings;
+    private Set<MemberMovie> memberMovies;
 
-    public Member() {}
-
-    public Member(String name) {
-        this.name = name;
+    public Set<MemberMovie> getMemberMovies() {
+        return memberMovies;
     }
-
-    // Getter und Setter
 
     public Long getId() {
         return id;
@@ -40,11 +40,8 @@ public class Member {
         this.name = name;
     }
 
-    public List<Rating> getRatings() {
-        return ratings;
+    public void setMemberMovies(Set<MemberMovie> memberMovies) {
+        this.memberMovies = memberMovies;
     }
 
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
 }

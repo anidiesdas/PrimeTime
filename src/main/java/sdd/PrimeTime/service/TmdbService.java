@@ -17,30 +17,22 @@ public class TmdbService {
     @Value("${tmdb.api.key}")
     private String apiKey;
 
+    // HTTP-Anfragen
     private final RestTemplate restTemplate = new RestTemplate();
 
-//    public String searchMovie(String query) {
-//        String url = String.format("%s/search/movie?api_key=%s&query=%s", apiUrl, apiKey, query);
-//        return restTemplate.getForObject(url, String.class);
-//    }
-
     public String searchMovie(String query) {
-        // Debugging: Zeige die übergebene query
-        System.out.println("Suchbegriff: " + query);
-
-        // Baue die URL mit der query
         String url = String.format("%s/search/movie?api_key=%s&query=%s", apiUrl, apiKey, query);
+        return restTemplate.getForObject(url, String.class);
+    }
 
-        // Debugging: Zeige die gebaute URL
-        System.out.println("Anfrage URL: " + url);
+    public String getPopularMovies() {
+        String url = String.format("%s/movie/popular?api_key=%s", apiUrl, apiKey);
+        return restTemplate.getForObject(url, String.class);
+    }
 
-        // Sende die Anfrage an TMDB und erhalte die Antwort als String
-        String response = restTemplate.getForObject(url, String.class);
-
-        // Debugging: Zeige die Antwort von TMDB
-        System.out.println("Antwort von TMDB: " + response);
-
-        return response;  // Gebe die rohe Antwort als String zurück
+    public String getMovieDetails(int id) {
+        String url = String.format("%s/movie/%d?api_key=%s", apiUrl, id, apiKey);
+        return restTemplate.getForObject(url, String.class);
     }
 
 }

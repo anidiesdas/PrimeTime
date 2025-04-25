@@ -1,9 +1,7 @@
 _Hoang An Nguyen, 594216_
 # PrimeTime 2.0🎬
 
-**PrimeTime** ist eine Webanwendung, die aus einem ganz persönlichen Projekt entstanden ist: dem gemeinsamen Filmkatalog meiner Freundesgruppe¹. Was früher mühsam in einer Excel-Tabelle gepflegt wurde, wird nun durch eine benutzerfreundliche Web-App ersetzt.
-
-Dank der Anbindung an die **TMDB API** können Filme einfach gesucht und direkt zur Watchlist oder als gesehen markiert werden – inklusive automatischer Übernahme aller relevanten Filmdaten. Zusätzlich lassen sich Bewertungen, Plattformen, Tags und weitere Details verwalten. So wird die gemeinsame Filmsammlung nicht nur übersichtlicher, sondern auch deutlich einfacher pflegbar.
+**PrimeTime** ist eine Webanwendung, die aus einem ganz persönlichen Projekt entstanden ist: dem gemeinsamen Filmkatalog meiner Freundesgruppe. Was früher mühsam in einer Excel-Tabelle gepflegt wurde, wird nun durch eine benutzerfreundliche Web-Anwendung ersetzt.
 
 Link zur Tabelle: https://docs.google.com/spreadsheets/d/1k2SilSEqoWUufsr4XzK0DlEaR9U5IKZ-cKQS-M9YL6g/edit?gid=0#gid=0
 

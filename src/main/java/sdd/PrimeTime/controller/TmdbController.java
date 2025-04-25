@@ -9,6 +9,8 @@ import sdd.PrimeTime.service.TmdbService;
  * Created by Ani Nguyen on 11/04/2025.
  * Author: An Nguyen
  */
+
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("")
 public class TmdbController {
@@ -21,10 +23,19 @@ public class TmdbController {
         return tmdbService.searchMovie(query);
     }
 
-    @GetMapping("/movies")
+    @GetMapping("/test")
     public ResponseEntity<String> getMovies() {
-        return ResponseEntity.ok("Hier sind alle Filme!");
+        return ResponseEntity.ok("Test. Test. Hier sind alle Filme!");
     }
 
+    @GetMapping("/popular")
+    public String getPopularMovies() {
+        return tmdbService.getPopularMovies();
+    }
+
+    @GetMapping("movie/{id}")
+    public String getMovieDetails(@PathVariable int id) {
+        return tmdbService.getMovieDetails(id);
+    }
 
 }

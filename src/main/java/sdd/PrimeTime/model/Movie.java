@@ -2,7 +2,9 @@ package sdd.PrimeTime.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Ani Nguyen on 11/04/2025.
@@ -16,7 +18,7 @@ public class Movie {
     private Long id;
 
     private String title;
-    private String genre;
+    private int genreId;
     private int runningTime;
     private LocalDate releaseDate;
 
@@ -28,20 +30,11 @@ public class Movie {
     @Enumerated(EnumType.STRING)
     private WatchlistStatus status;
 
-    @OneToMany(mappedBy = "movie")
-    private List<Rating> ratings;
+//    @OneToMany(mappedBy = "movie")
+//    private List<Rating> ratings = new ArrayList<>();
 
-    public Movie() {}
-
-    public Movie(String title, String genre, int runningTime, LocalDate releaseDate, Platform platform,
-                 String tags, WatchlistStatus status) {
-        this.title = title;
-        this.genre = genre;
-        this.runningTime = runningTime;
-        this.releaseDate = releaseDate;
-        this.platform = platform;
-        this.tags = tags;
-        this.status = status;
+    public Set<MemberMovie> getParticipantMovies() {
+        return participantMovies;
     }
 
     public Long getId() {
@@ -60,12 +53,12 @@ public class Movie {
         this.title = title;
     }
 
-    public String getGenre() {
-        return genre;
+    public int getGenreId() {
+        return genreId;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setGenreId(int genreId) {
+        this.genreId = genreId;
     }
 
     public int getRunningTime() {
@@ -108,11 +101,10 @@ public class Movie {
         this.status = status;
     }
 
-    public List<Rating> getRatings() {
-        return ratings;
+    public void setParticipantMovies(Set<MemberMovie> participantMovies) {
+        this.participantMovies = participantMovies;
     }
 
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
+    @OneToMany(mappedBy = "movie")
+    private Set<MemberMovie> participantMovies;
 }
