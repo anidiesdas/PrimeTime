@@ -1,6 +1,8 @@
 package sdd.PrimeTime.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,67 +16,69 @@ import java.util.Set;
 public class Movie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long id;
 
+    @NotNull
     private String title;
-    private int genreId;
+
+    @NotNull
+    @ElementCollection
+    private List<String> genres = new ArrayList<>();
+
+    @NotNull
     private int runningTime;
+
+    @NotNull
     private LocalDate releaseDate;
 
     @Enumerated(EnumType.STRING)
     private Platform platform;
 
-    private String tags;
+    @ElementCollection
+    private List<String> tags = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private WatchlistStatus status;
 
-//    @OneToMany(mappedBy = "movie")
-//    private List<Rating> ratings = new ArrayList<>();
+    @NotNull
+    private LocalDate watchDate;
 
+    @OneToMany(mappedBy = "movie")
+    private Set<MemberMovie> participantMovies;
+
+    // Getter + Setter
     public Set<MemberMovie> getParticipantMovies() {
         return participantMovies;
     }
 
-    public Long getId() {
-        return id;
+    public void setParticipantMovies(Set<MemberMovie> participantMovies) {
+        this.participantMovies = participantMovies;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public @NotNull LocalDate getWatchDate() {
+        return watchDate;
     }
 
-    public String getTitle() {
-        return title;
+    public void setWatchDate(@NotNull LocalDate watchDate) {
+        this.watchDate = watchDate;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public @NotNull WatchlistStatus getStatus() {
+        return status;
     }
 
-    public int getGenreId() {
-        return genreId;
+    public void setStatus(@NotNull WatchlistStatus status) {
+        this.status = status;
     }
 
-    public void setGenreId(int genreId) {
-        this.genreId = genreId;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public int getRunningTime() {
-        return runningTime;
-    }
-
-    public void setRunningTime(int runningTime) {
-        this.runningTime = runningTime;
-    }
-
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public Platform getPlatform() {
@@ -85,26 +89,45 @@ public class Movie {
         this.platform = platform;
     }
 
-    public String getTags() {
-        return tags;
+    public @NotNull LocalDate getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setReleaseDate(@NotNull LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public WatchlistStatus getStatus() {
-        return status;
+    @NotNull
+    public int getRunningTime() {
+        return runningTime;
     }
 
-    public void setStatus(WatchlistStatus status) {
-        this.status = status;
+    public void setRunningTime(@NotNull int runningTime) {
+        this.runningTime = runningTime;
     }
 
-    public void setParticipantMovies(Set<MemberMovie> participantMovies) {
-        this.participantMovies = participantMovies;
+    public @NotNull List<String> getGenres() {
+        return genres;
     }
 
-    @OneToMany(mappedBy = "movie")
-    private Set<MemberMovie> participantMovies;
+    public void setGenres(@NotNull List<String> genres) {
+        this.genres = genres;
+    }
+
+    public @NotNull String getTitle() {
+        return title;
+    }
+
+    public void setTitle(@NotNull String title) {
+        this.title = title;
+    }
+
+    public @NotNull Long getId() {
+        return id;
+    }
+
+    public void setId(@NotNull Long id) {
+        this.id = id;
+    }
+
 }

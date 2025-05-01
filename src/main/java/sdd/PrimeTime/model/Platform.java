@@ -14,5 +14,6 @@ public enum Platform {
     ARTE_MEDIATHEK,
     UCI_KINO,
     CINESTAR,
+    RTL_PLUS,
     OTHER
 }

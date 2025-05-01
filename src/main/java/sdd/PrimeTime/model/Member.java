@@ -1,6 +1,7 @@
 package sdd.PrimeTime.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,33 +16,38 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long id;
-    private String name;
 
-//    @OneToMany(mappedBy = "member")
-//    private List<Rating> ratings = new ArrayList<>();
+    @NotNull
+    String name;
 
     @OneToMany(mappedBy = "member")
     private Set<MemberMovie> memberMovies;
 
+    // Getter + Setter
     public Set<MemberMovie> getMemberMovies() {
         return memberMovies;
     }
 
-    public Long getId() {
+    public void setMemberMovies(Set<MemberMovie> memberMovies) {
+        this.memberMovies = memberMovies;
+    }
+
+    public @NotNull Long getId() {
         return id;
     }
 
-    public String getName() {
+    public void setId(@NotNull Long id) {
+        this.id = id;
+    }
+
+    public @NotNull String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
-    }
-
-    public void setMemberMovies(Set<MemberMovie> memberMovies) {
-        this.memberMovies = memberMovies;
     }
 
 }
