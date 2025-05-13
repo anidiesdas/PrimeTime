@@ -11,7 +11,7 @@ import java.util.Objects;
  * Author: An Nguyen
  */
 @Embeddable
-public class MemberMovieId implements Serializable {
+public class RatingId implements Serializable {
 
     @Column(name = "member_id")
     private Long MemberId;
@@ -19,9 +19,9 @@ public class MemberMovieId implements Serializable {
     @Column(name = "movie_id")
     private Long movieId;
 
-    public MemberMovieId() {}
+    public RatingId() {}
 
-    public MemberMovieId(Long participantId, Long movieId) {
+    public RatingId(Long participantId, Long movieId) {
         this.MemberId = participantId;
         this.movieId = movieId;
     }
@@ -42,12 +42,11 @@ public class MemberMovieId implements Serializable {
         this.movieId = movieId;
     }
 
-    // Equals und Hashcode für den zusammengesetzten Schlüssel
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        MemberMovieId that = (MemberMovieId) obj;
+        RatingId that = (RatingId) obj;
         return Objects.equals(MemberId, that.MemberId) && Objects.equals(movieId, that.movieId);
     }
 

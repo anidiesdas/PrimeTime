@@ -45,15 +45,15 @@ public class Movie {
     @NotNull
     private LocalDate watchDate;
 
-    @OneToMany(mappedBy = "movie")
-    private Set<MemberMovie> participantMovies;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Rating> participantMovies;
 
     // Getter + Setter
-    public Set<MemberMovie> getParticipantMovies() {
+    public Set<Rating> getParticipantMovies() {
         return participantMovies;
     }
 
-    public void setParticipantMovies(Set<MemberMovie> participantMovies) {
+    public void setParticipantMovies(Set<Rating> participantMovies) {
         this.participantMovies = participantMovies;
     }
 

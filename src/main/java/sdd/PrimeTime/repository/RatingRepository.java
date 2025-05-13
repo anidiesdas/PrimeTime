@@ -2,14 +2,15 @@ package sdd.PrimeTime.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import sdd.PrimeTime.model.Movie;
+import sdd.PrimeTime.model.Rating;
 
 /**
- * Created by Ani Nguyen on 01/05/2025.
+ * Created by Ani Nguyen on 13/05/2025.
  * Author: An Nguyen
  */
 @Repository
-public interface MovieRepository extends JpaRepository<Movie, Long> {
+public interface RatingRepository extends JpaRepository<Rating, Long> {
 
-    //TODO hier Filter & Sortierfunktionen
+    //TODO hier DB-Anfragen für Analysen
+
 }

@@ -23,15 +23,15 @@ public class Member {
     String name;
 
     @OneToMany(mappedBy = "member")
-    private Set<MemberMovie> memberMovies;
+    private Set<Rating> ratings;
 
     // Getter + Setter
-    public Set<MemberMovie> getMemberMovies() {
-        return memberMovies;
+    public Set<Rating> getRatings() {
+        return ratings;
     }
 
-    public void setMemberMovies(Set<MemberMovie> memberMovies) {
-        this.memberMovies = memberMovies;
+    public void setRatings(Set<Rating> ratings) {
+        this.ratings = getRatings();
     }
 
     public @NotNull Long getId() {

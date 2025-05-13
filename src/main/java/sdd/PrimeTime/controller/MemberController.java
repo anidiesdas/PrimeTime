@@ -20,14 +20,9 @@ public class MemberController {
     @Autowired
     private MemberRepository memberRepository;
 
-    @PostMapping
-    public ResponseEntity<Member> addMember(@RequestBody Member member) {
-        Member saved = memberRepository.save(member);
-        return ResponseEntity.ok(saved);
-    }
-
-    @GetMapping
+    @GetMapping()
     public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
+
 }

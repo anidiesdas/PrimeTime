@@ -8,10 +8,10 @@ import jakarta.persistence.*;
  * Author: An Nguyen
  */
 @Entity
-public class MemberMovie {
+public class Rating {
 
     @EmbeddedId
-    private MemberMovieId id;
+    private RatingId id;
 
     @ManyToOne
     @MapsId("MemberId")
@@ -25,11 +25,11 @@ public class MemberMovie {
 
     private int rating;
 
-    public MemberMovieId getId() {
+    public RatingId getId() {
         return id;
     }
 
-    public void setId(MemberMovieId id) {
+    public void setId(RatingId id) {
         this.id = id;
     }
 }

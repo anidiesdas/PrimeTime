@@ -9,5 +9,6 @@ import sdd.PrimeTime.model.Member;
  * Author: An Nguyen
  */
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {}
+public interface MemberRepository extends JpaRepository<Member, Long> {
+}
 
