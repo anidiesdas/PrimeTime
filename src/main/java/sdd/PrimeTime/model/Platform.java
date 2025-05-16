@@ -6,7 +6,7 @@ package sdd.PrimeTime.model;
  */
 public enum Platform {
     NETFLIX,
-    AMAZON_PRIME,
+    PRIME_VIDEO,
     DISNEY_PLUS,
     BLURAY_DVD,
     YOUTUBE,

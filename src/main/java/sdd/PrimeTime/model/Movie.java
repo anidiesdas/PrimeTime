@@ -46,55 +46,32 @@ public class Movie {
     private LocalDate watchDate;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Rating> participantMovies;
+    private Set<Rating> Rating;
 
-    // Getter + Setter
-    public Set<Rating> getParticipantMovies() {
-        return participantMovies;
+    public Movie() {}
+
+    public @NotNull Long getId() {
+        return id;
     }
 
-    public void setParticipantMovies(Set<Rating> participantMovies) {
-        this.participantMovies = participantMovies;
+    public void setId(@NotNull Long id) {
+        this.id = id;
     }
 
-    public @NotNull LocalDate getWatchDate() {
-        return watchDate;
+    public @NotNull String getTitle() {
+        return title;
     }
 
-    public void setWatchDate(@NotNull LocalDate watchDate) {
-        this.watchDate = watchDate;
+    public void setTitle(@NotNull String title) {
+        this.title = title;
     }
 
-    public @NotNull WatchlistStatus getStatus() {
-        return status;
+    public @NotNull List<String> getGenres() {
+        return genres;
     }
 
-    public void setStatus(@NotNull WatchlistStatus status) {
-        this.status = status;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public Platform getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(Platform platform) {
-        this.platform = platform;
-    }
-
-    public @NotNull LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(@NotNull LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setGenres(@NotNull List<String> genres) {
+        this.genres = genres;
     }
 
     @NotNull
@@ -106,28 +83,51 @@ public class Movie {
         this.runningTime = runningTime;
     }
 
-    public @NotNull List<String> getGenres() {
-        return genres;
+    public @NotNull LocalDate getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setGenres(@NotNull List<String> genres) {
-        this.genres = genres;
+    public void setReleaseDate(@NotNull LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public @NotNull String getTitle() {
-        return title;
+    public Platform getPlatform() {
+        return platform;
     }
 
-    public void setTitle(@NotNull String title) {
-        this.title = title;
+    public void setPlatform(Platform platform) {
+        this.platform = platform;
     }
 
-    public @NotNull Long getId() {
-        return id;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public void setId(@NotNull Long id) {
-        this.id = id;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
+    public @NotNull WatchlistStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(@NotNull WatchlistStatus status) {
+        this.status = status;
+    }
+
+    public @NotNull LocalDate getWatchDate() {
+        return watchDate;
+    }
+
+    public void setWatchDate(@NotNull LocalDate watchDate) {
+        this.watchDate = watchDate;
+    }
+
+    public Set<sdd.PrimeTime.model.Rating> getRating() {
+        return Rating;
+    }
+
+    public void setRating(Set<sdd.PrimeTime.model.Rating> rating) {
+        Rating = rating;
+    }
 }
