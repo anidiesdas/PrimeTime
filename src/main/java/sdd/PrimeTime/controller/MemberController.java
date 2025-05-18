@@ -3,6 +3,7 @@ package sdd.PrimeTime.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sdd.PrimeTime.dto.MemberDto;
 import sdd.PrimeTime.model.Member;
 import sdd.PrimeTime.repository.MemberRepository;
 
@@ -20,9 +21,12 @@ public class MemberController {
     @Autowired
     private MemberRepository memberRepository;
 
-    @GetMapping()
-    public List<Member> getAllMembers() {
-        return memberRepository.findAll();
+    @GetMapping("")
+    public List<MemberDto> getAllMembers() {
+        return memberRepository.findAll().stream()
+                .map(m -> new MemberDto(m.getId(), m.getName()))
+                .toList();
     }
+
 
 }

@@ -23,7 +23,7 @@ public class Rating {
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    private int rating;
+    private Double rating;
 
     public Rating() {}
 
@@ -51,11 +51,11 @@ public class Rating {
         this.movie = movie;
     }
 
-    public int getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 }

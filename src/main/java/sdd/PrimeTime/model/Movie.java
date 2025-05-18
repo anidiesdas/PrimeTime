@@ -42,7 +42,6 @@ public class Movie {
     @NotNull
     private WatchlistStatus status;
 
-    @NotNull
     private LocalDate watchDate;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -115,11 +114,11 @@ public class Movie {
         this.status = status;
     }
 
-    public @NotNull LocalDate getWatchDate() {
+    public LocalDate getWatchDate() {
         return watchDate;
     }
 
-    public void setWatchDate(@NotNull LocalDate watchDate) {
+    public void setWatchDate(LocalDate watchDate) {
         this.watchDate = watchDate;
     }
 
