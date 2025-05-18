@@ -1,21 +1,16 @@
 package sdd.PrimeTime.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sdd.PrimeTime.dto.MovieDto;
-import sdd.PrimeTime.dto.MovieWrapperDto;
 import sdd.PrimeTime.dto.MovieWrapperDto;
 import sdd.PrimeTime.dto.RatingDto;
 import sdd.PrimeTime.model.*;
 import sdd.PrimeTime.repository.MemberRepository;
 import sdd.PrimeTime.repository.MovieRepository;
 import sdd.PrimeTime.repository.RatingRepository;
-import sdd.PrimeTime.service.MovieService;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +19,7 @@ import java.util.Optional;
  * Author: An Nguyen
  */
 @RestController
-@RequestMapping("/saving")
+@RequestMapping("/movie")
 @CrossOrigin(origins = "http://localhost:5173")
 public class MovieController {
 
@@ -36,14 +31,23 @@ public class MovieController {
 
     @Autowired
     private MemberRepository memberRepository;
+
     //TODO @PostMapping zum Speichern von Movies
 
-    @PostMapping("")
+    //    TEST
+//    @Autowired
+//    private ObjectMapper objectMapper;
+//
+//    @PostMapping("")
+//    public ResponseEntity<?> saveMovie(@RequestBody MovieWrapperDto wrapper) throws JsonProcessingException {
+//        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(wrapper));
+//        return ResponseEntity.ok().build();
+//    }
+
+    @PostMapping("/saving")
     public ResponseEntity<?> saveMovie(@RequestBody MovieWrapperDto wrapper) {
         MovieDto dto = wrapper.getMovie();
         List<RatingDto> ratingDtos = wrapper.getRatings();
-
-        // Filmobjekt erstellen oder aktualisieren
         Movie movie = new Movie();
         movie.setId(dto.getId());
         movie.setTitle(dto.getTitle());
@@ -55,10 +59,8 @@ public class MovieController {
         movie.setStatus(dto.getStatus());
         movie.setWatchDate(dto.getWatchDate());
 
-        // Film zuerst speichern, damit er in den Ratings referenziert werden kann
         movie = movieRepository.save(movie);
 
-        // Ratings speichern (vorher sicherstellen, dass Teilnehmer existieren)
         for (RatingDto ratingDto : ratingDtos) {
             Optional<Member> optionalMember = memberRepository.findById(ratingDto.getMemberId());
             if (optionalMember.isEmpty()) continue;
@@ -78,22 +80,50 @@ public class MovieController {
         return ResponseEntity.ok("Movie and ratings saved.");
     }
 
-//    @PostMapping
-//    public ResponseEntity<?> saveMovie(@RequestBody MovieWrapperDto wrapper) {
-//        movieService.saveMovie(wrapper.getMovie());
-//        return ResponseEntity.ok().build();
-//    }
+    @GetMapping("/status/{movieId}")
+    public ResponseEntity<?> getMovieStatus(@PathVariable Long movieId) {
+        Optional<Movie> movie = movieRepository.findById(movieId);
+        if (movie.isEmpty()) {
+            return ResponseEntity.status(404).body("Movie not found");  // <-- jetzt wirklich 404
+        }
+        return ResponseEntity.ok(movie.get().getStatus());
+    }
 
-//    TEST
-//    @Autowired
-//    private ObjectMapper objectMapper;
-//
-//    @PostMapping("")
-//    public ResponseEntity<?> saveMovie(@RequestBody MovieWrapperDto wrapper) throws JsonProcessingException {
-//        System.out.println("Gesamter empfangener Payload:");
-//        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(wrapper));
-//        return ResponseEntity.ok().build();
-//    }
+    @GetMapping("/ratings/{movieId}")
+    public ResponseEntity<?> getRatingsForMovie(@PathVariable Long movieId) {
+        List<Rating> ratings = ratingRepository.findByMovieId(movieId);
+        List<RatingDto> ratingDtos = ratings.stream().map(r -> {
+            RatingDto dto = new RatingDto();
+            dto.setMovieId(r.getMovie().getId());
+            dto.setMemberId(r.getMember().getId());
+            dto.setRating(r.getRating());
+            dto.setMemberName(r.getMember().getName()); // <- memberName ergänzen
+            return dto;
+        }).toList();
+        return ResponseEntity.ok(ratingDtos);
+    }
 
+    @PostMapping("/update")
+    public ResponseEntity<?> addRatings(@RequestBody List<RatingDto> ratingDtos) {
+        for (RatingDto ratingDto : ratingDtos) {
+            Optional<Movie> movieOpt = movieRepository.findById(ratingDto.getMovieId());
+            Optional<Member> memberOpt = memberRepository.findById(ratingDto.getMemberId());
 
+            if (movieOpt.isEmpty() || memberOpt.isEmpty()) {
+                continue;
+            }
+
+            RatingId ratingId = new RatingId(ratingDto.getMemberId(), ratingDto.getMovieId());
+            Rating rating = ratingRepository.findById(ratingId).orElse(new Rating());
+
+            rating.setId(ratingId);
+            rating.setMovie(movieOpt.get());
+            rating.setMember(memberOpt.get());
+            rating.setRating(ratingDto.getRating());
+
+            ratingRepository.save(rating);
+        }
+
+        return ResponseEntity.ok("Ratings gespeichert.");
+    }
 }

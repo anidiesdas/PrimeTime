@@ -1,10 +1,8 @@
 package sdd.PrimeTime.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sdd.PrimeTime.dto.MemberDto;
-import sdd.PrimeTime.model.Member;
 import sdd.PrimeTime.repository.MemberRepository;
 
 import java.util.List;

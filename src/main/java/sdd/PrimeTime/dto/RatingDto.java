@@ -5,8 +5,18 @@ package sdd.PrimeTime.dto;
  * Author: An Nguyen
  */
 public class RatingDto {
+    private Long movieId;
     private Long memberId;
+    private String memberName;
     private Double rating;
+
+    public Long getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
+    }
 
     public Long getMemberId() {
         return memberId;
@@ -22,6 +32,14 @@ public class RatingDto {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
     }
 }
 
