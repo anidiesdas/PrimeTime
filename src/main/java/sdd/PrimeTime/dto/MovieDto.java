@@ -18,6 +18,8 @@ public class MovieDto {
     private int runningTime;
     private LocalDate releaseDate;
     private List<String> genres;
+    private Double averageRating;
+
 
     @Enumerated(EnumType.STRING)
     private WatchlistStatus status;
@@ -99,4 +101,10 @@ public class MovieDto {
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) { this.averageRating = averageRating; }
 }

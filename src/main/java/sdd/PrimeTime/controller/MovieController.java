@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sdd.PrimeTime.dto.MovieDto;
+import sdd.PrimeTime.dto.MovieUpdateDto;
 import sdd.PrimeTime.dto.MovieWrapperDto;
 import sdd.PrimeTime.dto.RatingDto;
 import sdd.PrimeTime.model.*;
@@ -12,7 +13,9 @@ import sdd.PrimeTime.repository.MovieRepository;
 import sdd.PrimeTime.repository.RatingRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Ani Nguyen on 01/05/2025.
@@ -31,18 +34,6 @@ public class MovieController {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    //TODO @PostMapping zum Speichern von Movies
-
-    //    TEST
-//    @Autowired
-//    private ObjectMapper objectMapper;
-//
-//    @PostMapping("")
-//    public ResponseEntity<?> saveMovie(@RequestBody MovieWrapperDto wrapper) throws JsonProcessingException {
-//        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(wrapper));
-//        return ResponseEntity.ok().build();
-//    }
 
     @PostMapping("/saving")
     public ResponseEntity<?> saveMovie(@RequestBody MovieWrapperDto wrapper) {
@@ -84,46 +75,90 @@ public class MovieController {
     public ResponseEntity<?> getMovieStatus(@PathVariable Long movieId) {
         Optional<Movie> movie = movieRepository.findById(movieId);
         if (movie.isEmpty()) {
-            return ResponseEntity.status(404).body("Movie not found");  // <-- jetzt wirklich 404
+            return ResponseEntity.status(404).body("Movie not found");
         }
         return ResponseEntity.ok(movie.get().getStatus());
     }
 
-    @GetMapping("/ratings/{movieId}")
-    public ResponseEntity<?> getRatingsForMovie(@PathVariable Long movieId) {
-        List<Rating> ratings = ratingRepository.findByMovieId(movieId);
-        List<RatingDto> ratingDtos = ratings.stream().map(r -> {
-            RatingDto dto = new RatingDto();
-            dto.setMovieId(r.getMovie().getId());
-            dto.setMemberId(r.getMember().getId());
-            dto.setRating(r.getRating());
-            dto.setMemberName(r.getMember().getName()); // <- memberName ergänzen
-            return dto;
-        }).toList();
-        return ResponseEntity.ok(ratingDtos);
-    }
-
     @PostMapping("/update")
-    public ResponseEntity<?> addRatings(@RequestBody List<RatingDto> ratingDtos) {
-        for (RatingDto ratingDto : ratingDtos) {
-            Optional<Movie> movieOpt = movieRepository.findById(ratingDto.getMovieId());
-            Optional<Member> memberOpt = memberRepository.findById(ratingDto.getMemberId());
+    public ResponseEntity<?> updateMovieAndRatings(@RequestBody MovieUpdateDto request) {
+        Optional<Movie> movieOpt = movieRepository.findById(request.getMovieId());
 
-            if (movieOpt.isEmpty() || memberOpt.isEmpty()) {
-                continue;
-            }
-
-            RatingId ratingId = new RatingId(ratingDto.getMemberId(), ratingDto.getMovieId());
-            Rating rating = ratingRepository.findById(ratingId).orElse(new Rating());
-
-            rating.setId(ratingId);
-            rating.setMovie(movieOpt.get());
-            rating.setMember(memberOpt.get());
-            rating.setRating(ratingDto.getRating());
-
-            ratingRepository.save(rating);
+        if (movieOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("Movie not found");
         }
 
-        return ResponseEntity.ok("Ratings gespeichert.");
+        Movie movie = movieOpt.get();
+
+        // tags aktualisieren
+        if (request.getTags() != null) {
+            movie.setTags(request.getTags());
+            movieRepository.save(movie);
+        }
+
+        // ratings aktualisieren
+        if (request.getRatings() != null) {
+            for (RatingDto ratingDto : request.getRatings()) {
+                Optional<Member> memberOpt = memberRepository.findById(ratingDto.getMemberId());
+                if (memberOpt.isEmpty()) continue;
+
+                RatingId ratingId = new RatingId(ratingDto.getMemberId(), movie.getId());
+                Rating rating = ratingRepository.findById(ratingId).orElse(new Rating());
+
+                rating.setId(ratingId);
+                rating.setMovie(movie);
+                rating.setMember(memberOpt.get());
+                rating.setRating(ratingDto.getRating());
+
+                ratingRepository.save(rating);
+            }
+        }
+
+        return ResponseEntity.ok("Movie updated with new tags and/or ratings.");
     }
+
+
+    @GetMapping("/status-counts")
+    public Map<WatchlistStatus, Long> getMovieStatusCounts() {
+        List<Movie> movies = movieRepository.findAll();
+        return movies.stream()
+                .collect(Collectors.groupingBy(Movie::getStatus, Collectors.counting()));
+    }
+
+    @GetMapping("/top-genres")
+    public List<String> getTopGenres() {
+        List<Movie> movies = movieRepository.findAll().stream()
+                .filter(m -> m.getStatus() == WatchlistStatus.COMPLETED || m.getStatus() == WatchlistStatus.DROPPED)
+                .toList();
+
+        Map<String, Long> genreCount = movies.stream()
+                .flatMap(m -> m.getGenres().stream())
+                .collect(Collectors.groupingBy(g -> g, Collectors.counting()));
+
+        return genreCount.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .toList();
+    }
+
+    @GetMapping("/total-runtime")
+    public Long getTotalRuntime() {
+        return movieRepository.findAll().stream()
+                .filter(m -> m.getStatus() == WatchlistStatus.COMPLETED)
+                .mapToLong(Movie::getRunningTime)
+                .sum();
+    }
+
+    @GetMapping("/{movieId}/tags")
+    public ResponseEntity<?> getTagsForMovie(@PathVariable Long movieId) {
+        Optional<Movie> movie = movieRepository.findById(movieId);
+        if (movie.isEmpty()) {
+            return ResponseEntity.status(404).body("Movie not found");
+        }
+
+        List<String> tags = movie.get().getTags();
+        return ResponseEntity.ok(tags);
+    }
+
 }
