@@ -13,7 +13,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/members")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "https://primetimefrontend.onrender.com"})
 public class MemberController {
 
     @Autowired

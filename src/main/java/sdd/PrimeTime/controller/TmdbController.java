@@ -10,8 +10,8 @@ import sdd.PrimeTime.service.TmdbService;
  * Author: An Nguyen
  */
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
+@CrossOrigin(origins = {"http://localhost:5173", "https://primetimefrontend.onrender.com"})
 @RequestMapping("")
 public class TmdbController {
 

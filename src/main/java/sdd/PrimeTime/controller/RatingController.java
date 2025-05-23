@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/ratings")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "https://primetimefrontend.onrender.com"})
 public class RatingController {
 
     @Autowired

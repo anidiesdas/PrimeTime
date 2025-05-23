@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/movie")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "https://primetimefrontend.onrender.com"})
 public class MovieController {
 
     @Autowired

@@ -12,8 +12,6 @@ import sdd.PrimeTime.repository.MovieRepository;
 @Service
 public class MovieService {
 
-    //TODO Logik zum Speichern der Filme in DB ggf. bereits mit Ratings
-
     //TODO SDD Stats Logik
 
     private final MovieRepository movieRepository;
