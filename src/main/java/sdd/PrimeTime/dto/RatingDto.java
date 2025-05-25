@@ -10,9 +10,7 @@ public class RatingDto {
     private String memberName;
     private Double rating;
 
-    public Long getMovieId() {
-        return movieId;
-    }
+    public Long getMovieId() { return movieId; }
 
     public void setMovieId(Long movieId) {
         this.movieId = movieId;
@@ -34,9 +32,7 @@ public class RatingDto {
         this.rating = rating;
     }
 
-    public String getMemberName() {
-        return memberName;
-    }
+    public String getMemberName() {return memberName; }
 
     public void setMemberName(String memberName) {
         this.memberName = memberName;

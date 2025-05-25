@@ -75,7 +75,7 @@ public class MovieController {
     public ResponseEntity<?> getMovieStatus(@PathVariable Long movieId) {
         Optional<Movie> movie = movieRepository.findById(movieId);
         if (movie.isEmpty()) {
-            return ResponseEntity.status(404).body("Movie not found");
+            return ResponseEntity.ok(null);
         }
         return ResponseEntity.ok(movie.get().getStatus());
     }
@@ -85,7 +85,7 @@ public class MovieController {
         Optional<Movie> movieOpt = movieRepository.findById(request.getMovieId());
 
         if (movieOpt.isEmpty()) {
-            return ResponseEntity.status(404).body("Movie not found");
+            return ResponseEntity.ok(null);
         }
 
         Movie movie = movieOpt.get();
@@ -154,7 +154,7 @@ public class MovieController {
     public ResponseEntity<?> getTagsForMovie(@PathVariable Long movieId) {
         Optional<Movie> movie = movieRepository.findById(movieId);
         if (movie.isEmpty()) {
-            return ResponseEntity.status(404).body("Movie not found");
+            return ResponseEntity.ok(null);
         }
 
         List<String> tags = movie.get().getTags();

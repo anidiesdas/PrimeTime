@@ -16,5 +16,6 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     //TODO hier Filter & Sortierfunktionen
+    //TODO SDD Stats Logik
 
 }

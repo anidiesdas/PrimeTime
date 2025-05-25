@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sdd.PrimeTime.dto.MemberAverageRatingDto;
 import sdd.PrimeTime.dto.MovieDto;
 import sdd.PrimeTime.dto.MovieRatingDto;
 import sdd.PrimeTime.dto.RatingDto;
@@ -56,9 +57,7 @@ public class RatingController {
                 .average()
                 .orElse(0.0);
 
-        double rounded = Math.round(average * 1000.0) / 1000.0;
-
-        return ResponseEntity.ok(rounded);
+        return ResponseEntity.ok(average);
     }
 
     @GetMapping("/top-rated")
@@ -71,4 +70,6 @@ public class RatingController {
         return ratingRepository.findWorstRatedMovies(PageRequest.of(0, 3));
     }
 
+    @GetMapping("/average-by-member")
+    public List<MemberAverageRatingDto> getAverageRatingsByMember() { return ratingRepository.findAverageRatingsGroupedByMember();}
 }
