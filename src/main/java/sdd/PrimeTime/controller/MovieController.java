@@ -161,13 +161,4 @@ public class MovieController {
         return ResponseEntity.ok(tags);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
-        if (!movieRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        movieRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 }
