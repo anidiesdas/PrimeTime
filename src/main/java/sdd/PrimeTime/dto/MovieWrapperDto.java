@@ -9,6 +9,7 @@ import java.util.List;
 public class MovieWrapperDto {
     private MovieDto movie;
     private List<RatingDto> ratings;
+    private String password;
 
     public MovieDto getMovie() {
         return movie;
@@ -25,5 +26,9 @@ public class MovieWrapperDto {
     public void setRatings(List<RatingDto> ratings) {
         this.ratings = ratings;
     }
+
+    public String getPassword() {return password;}
+
+    public void setPassword(String password) { this.password = password; }
 }
 

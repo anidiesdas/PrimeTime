@@ -1,12 +1,10 @@
 package sdd.PrimeTime.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sdd.PrimeTime.dto.MovieDto;
-import sdd.PrimeTime.dto.MovieUpdateDto;
-import sdd.PrimeTime.dto.MovieWrapperDto;
-import sdd.PrimeTime.dto.RatingDto;
+import sdd.PrimeTime.dto.*;
 import sdd.PrimeTime.model.*;
 import sdd.PrimeTime.repository.MemberRepository;
 import sdd.PrimeTime.repository.MovieRepository;
@@ -26,6 +24,9 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = {"http://localhost:5173", "https://primetimefrontend.onrender.com"})
 public class MovieController {
 
+    @Value("${app.movie.save.password}")
+    private String savePassword;
+
     @Autowired
     private MovieRepository movieRepository;
 
@@ -38,6 +39,12 @@ public class MovieController {
     @PostMapping("/saving")
     public ResponseEntity<?> saveMovie(@RequestBody MovieWrapperDto wrapper) {
         MovieDto dto = wrapper.getMovie();
+
+        if (dto.getStatus() == WatchlistStatus.DROPPED || dto.getStatus() == WatchlistStatus.COMPLETED) {            if (!savePassword.equals(wrapper.getPassword())) {
+                return ResponseEntity.ok("INVALID_PASSWORD");
+            }
+        }
+
         List<RatingDto> ratingDtos = wrapper.getRatings();
         Movie movie = new Movie();
         movie.setId(dto.getId());
@@ -77,7 +84,14 @@ public class MovieController {
         if (movie.isEmpty()) {
             return ResponseEntity.ok(null);
         }
-        return ResponseEntity.ok(movie.get().getStatus());
+
+        Movie foundMovie = movie.get();
+        MovieStatusResponseDto response = new MovieStatusResponseDto(
+                foundMovie.getStatus() != null ? foundMovie.getStatus().toString() : null,
+                foundMovie.getWatchDate()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/update")

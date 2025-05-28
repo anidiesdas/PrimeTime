@@ -7,13 +7,12 @@ Link zur Tabelle: https://docs.google.com/spreadsheets/d/1k2SilSEqoWUufsr4XzK0Dl
 
 ## ⭐ Features
 
-- Integration der **TMDB API** zur automatischen Filmdaten-Erfassung
-- Eigene **Watchlist** erstellen und verwalten
-- **Bewertungen** für gesehene Filme abgeben
-- Eintrag von **Datum**, **Plattform** 
-- **Tags** und **Genres** hinzufügen
-- **Statistiken**: Durchschnittsbewertung, Top-Genres, etc.
-- **Sortierfunktionen** (nach Score, Person, etc.)
+- Integration der TMDB API zur automatischen Filmdaten-Erfassung
+- Eigene Watchlist erstellen und verwalten
+- Bewertungen für gesehene Filme abgeben
+- Datum, Plattform, Tags hinzufügen 
+- Statistiken: Durchschnittsbewertung, Top-Genres, etc.
+- Sortierfunktionen (nach Score, Person, etc.)
 
 ## 🛠️ Tech Stack
 
