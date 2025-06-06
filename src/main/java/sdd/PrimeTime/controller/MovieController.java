@@ -40,7 +40,8 @@ public class MovieController {
     public ResponseEntity<?> saveMovie(@RequestBody MovieWrapperDto wrapper) {
         MovieDto dto = wrapper.getMovie();
 
-        if (dto.getStatus() == WatchlistStatus.DROPPED || dto.getStatus() == WatchlistStatus.COMPLETED) {            if (!savePassword.equals(wrapper.getPassword())) {
+        if (dto.getStatus() == WatchlistStatus.DROPPED || dto.getStatus() == WatchlistStatus.COMPLETED) {
+            if (!savePassword.equals(wrapper.getPassword())) {
                 return ResponseEntity.ok("INVALID_PASSWORD");
             }
         }
@@ -96,6 +97,10 @@ public class MovieController {
 
     @PostMapping("/update")
     public ResponseEntity<?> updateMovieAndRatings(@RequestBody MovieUpdateDto request) {
+        if (!savePassword.equals(request.getPassword())) {
+            return ResponseEntity.ok("INVALID_PASSWORD");
+        }
+
         Optional<Movie> movieOpt = movieRepository.findById(request.getMovieId());
 
         if (movieOpt.isEmpty()) {
@@ -173,6 +178,51 @@ public class MovieController {
 
         List<String> tags = movie.get().getTags();
         return ResponseEntity.ok(tags);
+    }
+
+    @GetMapping("/plantowatch")
+    public ResponseEntity<List<Movie>> getMoviesPlannedToWatch() {
+        List<Movie> movies = movieRepository.findByStatus(WatchlistStatus.PLAN_TO_WATCH);
+        return ResponseEntity.ok(movies);
+    }
+
+    @GetMapping("/dropped")
+    public ResponseEntity<List<MovieDto>> getDroppedMovies() {
+        List<Movie> movies = movieRepository.findByStatus(WatchlistStatus.DROPPED);
+        List<MovieDto> result = movies.stream()
+                .map(MovieDto::new)
+                .toList();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/completed")
+    public ResponseEntity<List<CompletedMovieDto>> getCompletedMovies() {
+        List<Movie> completedMovies = movieRepository.findByStatus(WatchlistStatus.COMPLETED);
+
+        List<CompletedMovieDto> result = completedMovies.stream().map(movie -> {
+            CompletedMovieDto dto = new CompletedMovieDto();
+            dto.setId(movie.getId());
+            dto.setTitle(movie.getTitle());
+            dto.setRunningTime(movie.getRunningTime());
+            dto.setGenres(movie.getGenres());
+            dto.setWatchDate(movie.getWatchDate());
+            dto.setReleaseDate(movie.getReleaseDate());
+            dto.setPlatform(movie.getPlatform());
+
+            // Bewertungen umwandeln
+            List<RatingDto> ratingDtos = movie.getRating().stream()
+                    .map(rating -> {
+                        RatingDto ratingDto = new RatingDto();
+                        ratingDto.setMemberId(rating.getMember().getId());
+                        ratingDto.setRating(rating.getRating());
+                        return ratingDto;
+                    }).toList();
+
+            dto.setRatings(ratingDtos);
+            return dto;
+        }).toList();
+
+        return ResponseEntity.ok(result);
     }
 
 }

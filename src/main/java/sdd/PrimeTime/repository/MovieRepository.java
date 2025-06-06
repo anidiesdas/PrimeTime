@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sdd.PrimeTime.dto.MovieDto;
 import sdd.PrimeTime.model.Movie;
+import sdd.PrimeTime.model.WatchlistStatus;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
  */
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
+
+    List<Movie> findByStatus(WatchlistStatus status);
 
     //TODO hier Filter & Sortierfunktionen
     //TODO SDD Stats Logik

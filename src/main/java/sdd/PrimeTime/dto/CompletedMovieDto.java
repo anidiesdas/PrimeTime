@@ -2,7 +2,6 @@ package sdd.PrimeTime.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import sdd.PrimeTime.model.Movie;
 import sdd.PrimeTime.model.Platform;
 import sdd.PrimeTime.model.WatchlistStatus;
 
@@ -10,40 +9,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Created by Ani Nguyen on 16/05/2025.
+ * Created by Ani Nguyen on 06/06/2025.
  * Author: An Nguyen
  */
-public class MovieDto {
+public class CompletedMovieDto {
     private Long id;
     private String title;
     private int runningTime;
-    private LocalDate releaseDate;
     private List<String> genres;
-    private Double averageRating;
-
-    @Enumerated(EnumType.STRING)
-    private WatchlistStatus status;
     private LocalDate watchDate;
+    private LocalDate releaseDate;
 
     @Enumerated(EnumType.STRING)
     private Platform platform;
 
-    private List<String> tags;
-
-    public MovieDto() {}
-
-    public MovieDto(Movie movie) {
-        this.id = movie.getId();
-        this.title = movie.getTitle();
-        this.genres = movie.getGenres();
-        this.runningTime = movie.getRunningTime();
-        this.releaseDate = movie.getReleaseDate();
-        this.platform = movie.getPlatform();
-        this.tags = movie.getTags();
-        this.status = movie.getStatus();
-        this.watchDate = movie.getWatchDate();
-    }
-
+    private List<RatingDto> ratings;
 
     public Long getId() {
         return id;
@@ -69,28 +49,12 @@ public class MovieDto {
         this.runningTime = runningTime;
     }
 
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public List<String> getGenres() {
         return genres;
     }
 
     public void setGenres(List<String> genres) {
         this.genres = genres;
-    }
-
-    public WatchlistStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(WatchlistStatus status) {
-        this.status = status;
     }
 
     public LocalDate getWatchDate() {
@@ -101,6 +65,14 @@ public class MovieDto {
         this.watchDate = watchDate;
     }
 
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     public Platform getPlatform() {
         return platform;
     }
@@ -109,17 +81,11 @@ public class MovieDto {
         this.platform = platform;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public List<RatingDto> getRatings() {
+        return ratings;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setRatings(List<RatingDto> ratings) {
+        this.ratings = ratings;
     }
-
-    public Double getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(Double averageRating) { this.averageRating = averageRating; }
 }

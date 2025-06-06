@@ -11,6 +11,8 @@ public class MovieWrapperDto {
     private List<RatingDto> ratings;
     private String password;
 
+    public MovieWrapperDto() {}
+
     public MovieDto getMovie() {
         return movie;
     }

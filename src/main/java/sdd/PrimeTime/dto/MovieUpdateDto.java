@@ -10,6 +10,7 @@ public class MovieUpdateDto {
     private Long movieId;
     private List<String> tags;
     private List<RatingDto> ratings;
+    private String password;
 
     public Long getMovieId() {
         return movieId;
@@ -34,5 +35,9 @@ public class MovieUpdateDto {
     public void setRatings(List<RatingDto> ratings) {
         this.ratings = ratings;
     }
+
+    public String getPassword() {return password;}
+
+    public void setPassword(String password) { this.password = password; }
 }
 
