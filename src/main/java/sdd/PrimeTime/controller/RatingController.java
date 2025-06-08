@@ -62,12 +62,12 @@ public class RatingController {
 
     @GetMapping("/top-rated")
     public List<String> getTopRatedMovies() {
-        return ratingRepository.findTopRatedMovies(PageRequest.of(0, 3));
+        return ratingRepository.findTopRatedMovies(PageRequest.of(0, 5));
     }
 
     @GetMapping("/worst-rated")
     public List<String> getWorstRatedMovies() {
-        return ratingRepository.findWorstRatedMovies(PageRequest.of(0, 3));
+        return ratingRepository.findWorstRatedMovies(PageRequest.of(0, 5));
     }
 
     @GetMapping("/average-by-member")

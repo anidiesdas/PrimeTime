@@ -2,6 +2,7 @@ package sdd.PrimeTime.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sdd.PrimeTime.dto.*;
@@ -136,6 +137,23 @@ public class MovieController {
         return ResponseEntity.ok("Movie updated with new tags and/or ratings.");
     }
 
+    @DeleteMapping("/{movieId}")
+    public ResponseEntity<?> deleteMovie(
+            @PathVariable Long movieId,
+            @RequestParam String password
+    ) {
+        if (!savePassword.equals(password)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("INVALID_PASSWORD");
+        }
+
+        Optional<Movie> movieOpt = movieRepository.findById(movieId);
+        if (movieOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        movieRepository.delete(movieOpt.get());
+        return ResponseEntity.ok("Movie deleted successfully.");
+    }
 
     @GetMapping("/status-counts")
     public Map<WatchlistStatus, Long> getMovieStatusCounts() {
@@ -156,7 +174,7 @@ public class MovieController {
 
         return genreCount.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .limit(3)
+                .limit(5)
                 .map(Map.Entry::getKey)
                 .toList();
     }
@@ -208,6 +226,7 @@ public class MovieController {
             dto.setWatchDate(movie.getWatchDate());
             dto.setReleaseDate(movie.getReleaseDate());
             dto.setPlatform(movie.getPlatform());
+            dto.setTags(movie.getTags());
 
             // Bewertungen umwandeln
             List<RatingDto> ratingDtos = movie.getRating().stream()

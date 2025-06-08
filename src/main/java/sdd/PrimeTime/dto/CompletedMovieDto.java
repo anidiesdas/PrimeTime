@@ -24,6 +24,8 @@ public class CompletedMovieDto {
     private Platform platform;
 
     private List<RatingDto> ratings;
+    private List<String> tags;
+
 
     public Long getId() {
         return id;
@@ -88,4 +90,8 @@ public class CompletedMovieDto {
     public void setRatings(List<RatingDto> ratings) {
         this.ratings = ratings;
     }
+
+    public List<String> getTags() { return tags; }
+
+    public void setTags(List<String> tags) { this.tags = tags; }
 }

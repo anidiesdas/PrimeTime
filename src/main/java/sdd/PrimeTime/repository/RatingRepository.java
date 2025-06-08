@@ -41,7 +41,7 @@ public interface RatingRepository extends JpaRepository<Rating, RatingId> {
     @Query("""
     SELECT new sdd.PrimeTime.dto.MemberAverageRatingDto(
         CASE 
-            WHEN r.member.id IN (7,8,9,10) THEN "guest"
+            WHEN r.member.id IN (7,8,9,10,11,12) THEN "guest"
             ELSE r.member.name
         END,
         AVG(r.rating)
@@ -49,7 +49,7 @@ public interface RatingRepository extends JpaRepository<Rating, RatingId> {
     FROM Rating r
     GROUP BY 
         CASE 
-            WHEN r.member.id IN (7,8,9,10) THEN "guest"
+            WHEN r.member.id IN (7,8,9,10,11,12) THEN "guest"
             ELSE r.member.name
         END
     ORDER BY AVG(r.rating) DESC
