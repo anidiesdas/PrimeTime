@@ -1,18 +1,10 @@
 package sdd.PrimeTime.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sdd.PrimeTime.dto.MemberAverageRatingDto;
-import sdd.PrimeTime.dto.MovieDto;
-import sdd.PrimeTime.dto.MovieRatingDto;
-import sdd.PrimeTime.dto.RatingDto;
-import sdd.PrimeTime.model.Rating;
-import sdd.PrimeTime.repository.MemberRepository;
-import sdd.PrimeTime.repository.MovieRepository;
-import sdd.PrimeTime.repository.RatingRepository;
+import sdd.PrimeTime.dto.*;
+import sdd.PrimeTime.service.RatingService;
 
 import java.util.List;
 
@@ -26,50 +18,65 @@ import java.util.List;
 public class RatingController {
 
     @Autowired
-    private RatingRepository ratingRepository;
-
-    @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
+    private RatingService ratingService;
 
     @GetMapping("/movie/{movieId}")
-    public ResponseEntity<?> getRatingsForMovie(@PathVariable Long movieId) {
-        List<Rating> ratings = ratingRepository.findByMovieId(movieId);
-        List<RatingDto> ratingDtos = ratings.stream().map(r -> {
-            RatingDto dto = new RatingDto();
-            dto.setMovieId(r.getMovie().getId());
-            dto.setMemberId(r.getMember().getId());
-            dto.setRating(r.getRating());
-            dto.setMemberName(r.getMember().getName());
-            return dto;
-        }).toList();
-        return ResponseEntity.ok(ratingDtos);
+    public ResponseEntity<List<RatingDto>> getRatingsForMovie(@PathVariable Long movieId) {
+        try {
+            List<RatingDto> ratingDtos = ratingService.getRatingsForMovie(movieId);
+            return ResponseEntity.ok(ratingDtos);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/average-rating")
     public ResponseEntity<Double> getAverageRating() {
-        List<Rating> ratings = ratingRepository.findAll();
-        double average = ratings.stream()
-                .filter(r -> r.getRating() != null)
-                .mapToDouble(Rating::getRating)
-                .average()
-                .orElse(0.0);
-
-        return ResponseEntity.ok(average);
+        try {
+            Double average = ratingService.getAverageRating();
+            return ResponseEntity.ok(average);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/top-rated")
-    public List<String> getTopRatedMovies() {
-        return ratingRepository.findTopRatedMovies(PageRequest.of(0, 5));
+    public ResponseEntity<List<String>> getTopRatedMovies() {
+        try {
+            List<String> topRatedMovies = ratingService.getTopRatedMovies();
+            return ResponseEntity.ok(topRatedMovies);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/worst-rated")
-    public List<String> getWorstRatedMovies() {
-        return ratingRepository.findWorstRatedMovies(PageRequest.of(0, 5));
+    public ResponseEntity<List<String>> getWorstRatedMovies() {
+        try {
+            List<String> worstRatedMovies = ratingService.getWorstRatedMovies();
+            return ResponseEntity.ok(worstRatedMovies);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/average-by-member")
-    public List<MemberAverageRatingDto> getAverageRatingsByMember() { return ratingRepository.findAverageRatingsGroupedByMember();}
+    public ResponseEntity<List<MemberAverageRatingDto>> getAverageRatingsByMember() {
+        try {
+            List<MemberAverageRatingDto> averageRatings = ratingService.getAverageRatingsByMember();
+            return ResponseEntity.ok(averageRatings);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/global-progress")
+    public ResponseEntity<List<GlobalRatingProgressDto>> getGlobalRatingProgress() {
+        try {
+            List<GlobalRatingProgressDto> result = ratingService.getGlobalRatingProgress();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

@@ -56,4 +56,16 @@ public interface RatingRepository extends JpaRepository<Rating, RatingId> {
     """)
     List<MemberAverageRatingDto> findAverageRatingsGroupedByMember();
 
+    @Query(value = """
+    SELECT\s
+        m.watch_date AS date,
+        ROUND(AVG(r.rating)::numeric, 2) AS avg_rating
+    FROM rating r
+    JOIN movie m ON r.movie_id = m.id
+    WHERE m.watch_date IS NOT NULL AND r.rating IS NOT NULL
+    GROUP BY m.watch_date
+    ORDER BY m.watch_date
+""", nativeQuery = true)
+    List<Object[]> getAverageRatingPerDay();
+
 }

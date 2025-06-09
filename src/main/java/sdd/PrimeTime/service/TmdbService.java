@@ -17,22 +17,37 @@ public class TmdbService {
     @Value("${tmdb.api.key}")
     private String apiKey;
 
-    // HTTP-Anfragen
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public TmdbService() {
+        this.restTemplate = new RestTemplate();
+    }
 
     public String searchMovie(String query) {
-        String url = String.format("%s/search/movie?api_key=%s&query=%s", apiUrl, apiKey, query);
+        String url = buildUrl("/search/movie", "query=" + query);
         return restTemplate.getForObject(url, String.class);
     }
 
     public String getPopularMovies() {
-        String url = String.format("%s/movie/popular?api_key=%s", apiUrl, apiKey);
+        String url = buildUrl("/movie/popular");
         return restTemplate.getForObject(url, String.class);
     }
 
     public String getMovieDetails(int id) {
-        String url = String.format("%s/movie/%d?api_key=%s", apiUrl, id, apiKey);
+        String url = buildUrl("/movie/" + id);
         return restTemplate.getForObject(url, String.class);
     }
 
+    private String buildUrl(String endpoint, String... additionalParams) {
+        StringBuilder url = new StringBuilder(apiUrl)
+                .append(endpoint)
+                .append("?api_key=")
+                .append(apiKey);
+
+        for (String param : additionalParams) {
+            url.append("&").append(param);
+        }
+
+        return url.toString();
+    }
 }

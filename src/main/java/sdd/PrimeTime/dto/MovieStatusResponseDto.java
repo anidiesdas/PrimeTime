@@ -1,5 +1,7 @@
 package sdd.PrimeTime.dto;
 
+import sdd.PrimeTime.model.Platform;
+
 import java.time.LocalDate;
 
 /**
@@ -9,10 +11,12 @@ import java.time.LocalDate;
 public class MovieStatusResponseDto {
     private String status;
     private LocalDate watchDate;
+    private Platform platform;
 
-    public MovieStatusResponseDto(String status, LocalDate watchDate) {
+    public MovieStatusResponseDto(String status, LocalDate watchDate, Platform platform) {
         this.status = status;
         this.watchDate = watchDate;
+        this.platform = platform;
     }
 
     public String getStatus() {
@@ -22,5 +26,7 @@ public class MovieStatusResponseDto {
     public LocalDate getWatchDate() {
         return watchDate;
     }
+
+    public Platform getPlatform() { return platform; }
 }
 

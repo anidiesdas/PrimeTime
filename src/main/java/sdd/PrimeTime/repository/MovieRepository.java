@@ -18,7 +18,4 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     List<Movie> findByStatus(WatchlistStatus status);
 
-    //TODO hier Filter & Sortierfunktionen
-    //TODO SDD Stats Logik
-
 }
