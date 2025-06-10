@@ -1,15 +1,23 @@
 package sdd.PrimeTime.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sdd.PrimeTime.dto.*;
 import sdd.PrimeTime.model.*;
+import sdd.PrimeTime.repository.MovieRepository;
+import sdd.PrimeTime.repository.RatingRepository;
 import sdd.PrimeTime.service.MovieService;
 
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Ani Nguyen on 01/05/2025.
@@ -22,6 +30,12 @@ public class MovieController {
 
     @Autowired
     private MovieService movieService;
+
+    @Autowired
+    private MovieRepository movieRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
 
     @PostMapping("/saving")
     public ResponseEntity<String> saveMovie(@RequestBody MovieWrapperDto wrapper) {
@@ -45,18 +59,8 @@ public class MovieController {
 
     @DeleteMapping("/{movieId}")
     public ResponseEntity<String> deleteMovie(@PathVariable Long movieId, @RequestParam String password) {
-        try {
-            String result = movieService.deleteMovie(movieId, password);
-            if ("INVALID_PASSWORD".equals(result)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
-            }
-            if ("MOVIE_NOT_FOUND".equals(result)) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        movieService.deleteMovie(movieId, password);
+        return ResponseEntity.ok("Movie deleted successfully.");
     }
 
     @GetMapping("/status/{movieId}")
@@ -133,6 +137,16 @@ public class MovieController {
     public ResponseEntity<List<CompletedMovieDto>> getCompletedMovies() {
         try {
             List<CompletedMovieDto> result = movieService.getCompletedMovies();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/monthly-recap")
+    public ResponseEntity<MonthlyRecapDto> getMonthlyRecap() {
+        try {
+            MonthlyRecapDto result = movieService.getMonthlyRecap();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

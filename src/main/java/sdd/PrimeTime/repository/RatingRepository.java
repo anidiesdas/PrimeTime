@@ -5,14 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sdd.PrimeTime.dto.MemberAverageRatingDto;
-import sdd.PrimeTime.dto.MovieDto;
-import sdd.PrimeTime.dto.MovieRatingDto;
-import sdd.PrimeTime.model.Movie;
 import sdd.PrimeTime.model.Rating;
 import sdd.PrimeTime.model.RatingId;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Ani Nguyen on 13/05/2025.
@@ -67,5 +64,11 @@ public interface RatingRepository extends JpaRepository<Rating, RatingId> {
     ORDER BY m.watch_date
 """, nativeQuery = true)
     List<Object[]> getAverageRatingPerDay();
+
+    @Query("SELECT r.movie.title FROM Rating r WHERE r.movie.watchDate BETWEEN :start AND :end GROUP BY r.movie.id, r.movie.title ORDER BY AVG(r.rating) DESC")
+    List<String> findBestRatedMovieTitleInMonth(LocalDate start, LocalDate end, Pageable pageable);
+
+    @Query("SELECT r.movie.title FROM Rating r WHERE r.movie.watchDate BETWEEN :start AND :end GROUP BY r.movie.id, r.movie.title ORDER BY AVG(r.rating) ASC")
+    List<String> findWorstRatedMovieTitleInMonth(LocalDate start, LocalDate end, Pageable pageable);
 
 }

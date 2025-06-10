@@ -1,16 +1,23 @@
 package sdd.PrimeTime.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import sdd.PrimeTime.dto.*;
 import sdd.PrimeTime.model.*;
 import sdd.PrimeTime.repository.MemberRepository;
 import sdd.PrimeTime.repository.MovieRepository;
 import sdd.PrimeTime.repository.RatingRepository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
+import java.time.format.TextStyle;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,18 +113,15 @@ public class MovieService {
         return "Movie updated with new tags and/or ratings.";
     }
 
-    public String deleteMovie(Long movieId, String password) {
+    public void deleteMovie(Long movieId, String password) {
         if (!passwordService.validatePassword(password)) {
-            return "INVALID_PASSWORD";
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "INVALID_PASSWORD");
         }
 
-        Optional<Movie> movieOpt = movieRepository.findById(movieId);
-        if (movieOpt.isEmpty()) {
-            return "MOVIE_NOT_FOUND";
-        }
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "MOVIE_NOT_FOUND"));
 
-        movieRepository.delete(movieOpt.get());
-        return "Movie deleted successfully.";
+        movieRepository.delete(movie);
     }
 
     public MovieStatusResponseDto getMovieStatus(Long movieId) {
@@ -205,5 +209,37 @@ public class MovieService {
             dto.setRatings(ratingDtos);
             return dto;
         }).toList();
+    }
+
+    public MonthlyRecapDto getMonthlyRecap() {
+        LocalDate now = LocalDate.now();
+        LocalDate start = now.withDayOfMonth(1).minusMonths(1);
+        LocalDate end = now.withDayOfMonth(1).minusDays(1);
+
+        String monthName = start.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+
+        int totalMovies = movieRepository.countMoviesWatchedInMonth(start, end);
+        Integer runtimeSum = movieRepository.sumRuntimeInMonth(start, end);
+        int totalRuntime = runtimeSum != null ? runtimeSum : 0;
+
+        List<Movie> movies = movieRepository.findAllWatchedInMonth(start, end);
+
+        Map<String, Long> genreCount = movies.stream()
+                .flatMap(m -> m.getGenres().stream())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        List<String> topGenres = genreCount.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .toList();
+
+        Pageable oneResult = PageRequest.of(0, 1);
+        String bestMovie = ratingRepository.findBestRatedMovieTitleInMonth(start, end, oneResult)
+                .stream().findFirst().orElse("N/A");
+        String worstMovie = ratingRepository.findWorstRatedMovieTitleInMonth(start, end, oneResult)
+                .stream().findFirst().orElse("N/A");
+
+        return new MonthlyRecapDto(monthName, totalMovies, totalRuntime, topGenres, bestMovie, worstMovie);
     }
 }
