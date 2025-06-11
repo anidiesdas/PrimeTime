@@ -15,8 +15,6 @@ public class MonthlyRecapDto {
     private String bestRatedMovie;
     private String worstRatedMovie;
 
-    public MonthlyRecapDto() {}
-
     public MonthlyRecapDto(String monthName, int totalMoviesWatched, int totalRuntime,
                            List<String> topGenres, String bestRatedMovie, String worstRatedMovie) {
         this.monthName = monthName;
