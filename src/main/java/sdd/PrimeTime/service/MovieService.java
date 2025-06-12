@@ -146,7 +146,7 @@ public class MovieService {
 
     public List<String> getTopGenres() {
         List<Movie> movies = movieRepository.findAll().stream()
-                .filter(m -> m.getStatus() == WatchlistStatus.COMPLETED || m.getStatus() == WatchlistStatus.DROPPED)
+                .filter(m -> m.getStatus() == WatchlistStatus.COMPLETED)
                 .toList();
 
         Map<String, Long> genreCount = movies.stream()
