@@ -29,4 +29,6 @@ public class MemberController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+
 }
