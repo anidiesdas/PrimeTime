@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sdd.PrimeTime.dto.MemberDto;
+import sdd.PrimeTime.dto.MemberWatchedMoviesStatsDto;
 import sdd.PrimeTime.service.MemberService;
 
 import java.util.List;
@@ -25,6 +26,16 @@ public class MemberController {
         try {
             List<MemberDto> members = memberService.getAllMembers();
             return ResponseEntity.ok(members);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/watched-counts")
+    public ResponseEntity<List<MemberWatchedMoviesStatsDto>> getMemberWatchedMoviesStats() {
+        try {
+            List<MemberWatchedMoviesStatsDto> stats = memberService.getMemberWatchedMoviesStats();
+            return ResponseEntity.ok(stats);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
